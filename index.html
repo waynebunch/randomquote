@@ -1,0 +1,160 @@
+
+<!DOCTYPE html><html class=''>
+<head><script src='//production-assets.codepen.io/assets/editor/live/console_runner-5710c30fb566082d9fcb6e7d97ee7e3f2a326128c9f334a4231b6fd752b29965.js'></script><script src='//production-assets.codepen.io/assets/editor/live/events_runner-d5e4bf42585b8da8c18f7d963dbfc17cd66a79aa586c9448c4de8d6952ee9d97.js'></script><script src='//production-assets.codepen.io/assets/editor/live/css_live_reload_init-25d1423d5d6fb975e7d61832d2c061422a94963ca446583b965dfc5569147311.js'></script><meta charset='UTF-8'><meta name="robots" content="noindex"><link rel="shortcut icon" type="image/x-icon" href="//production-assets.codepen.io/assets/favicon/favicon-8ea04875e70c4b0bb41da869e81236e54394d63638a1ef12fa558a4a835f1164.ico" /><link rel="mask-icon" type="" href="//production-assets.codepen.io/assets/favicon/logo-pin-f2d2b6d2c61838f7e76325261b7195c27224080bc099486ddd6dccb469b8e8e6.svg" color="#111" /><link rel="canonical" href="http://codepen.io/waynebunch/pen/MegEYQ" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href='https://fonts.googleapis.com/css?family=Playfair+Display' rel='stylesheet' type='text/css'>
+<link rel='stylesheet prefetch' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css'>
+<style class="cp-pen-styles">html, body {
+  height: 100%;
+}
+
+.jumbotron {
+
+}
+
+.jumbotron.vertical-center {
+  margin-bottom: 0; /* Remove the default bottom margin of .jumbotron */
+}
+
+.vertical-center {
+  min-height: 100%;  /* Fallback for vh unit */
+  min-height: 100vh; /* You might also want to use
+                        'height' property instead.
+                        
+                        Note that for percentage values of
+                        'height' or 'min-height' properties,
+                        the 'height' of the parent element
+                        should be specified explicitly.
+  
+                        In this case the parent of '.vertical-center'
+                        is the <body> element */
+
+  /* Make it a flex container */
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex; 
+  
+  /* Align the bootstrap's container vertically */
+    -webkit-box-align : center;
+  -webkit-align-items : center;
+       -moz-box-align : center;
+       -ms-flex-align : center;
+          align-items : center;
+  
+  /* In legacy web browsers such as Firefox 9
+     we need to specify the width of the flex container */
+  width: 100%;
+  
+  /* Also 'margin: 0 auto' doesn't have any effect on flex items in such web browsers
+     hence the bootstrap's container won't be aligned to the center anymore.
+  
+     Therefore, we should use the following declarations to get it centered again */
+         -webkit-box-pack : center;
+            -moz-box-pack : center;
+            -ms-flex-pack : center;
+  -webkit-justify-content : center;
+          justify-content : center;
+}
+
+.container {
+  background-color: gold;
+  max-width:50% !important;
+  border-radius:20px;
+}
+
+#quote {
+  color:white;
+  font-weight:bold;
+  font-size:40px;
+  font-family: 'Playfair Display', serif;
+}
+
+span {
+  color:white;
+  font-weight:bold;
+  font-size:60px;
+  font-family: serif;
+}
+
+#author {
+  color:white;
+  font-weight:bold;
+  font-size:20px;
+  font-family: 'Playfair Display', serif;
+}
+
+#by {
+  color:white;
+  font-weight:bold;
+  font-size:15px;
+  font-family: 'Playfair Display', serif;
+ 
+}
+
+</style></head><body>
+<div class="jumbotron vertical-center text-center">
+  <row>
+    <div class="container">
+      <div id="quote"></div>
+      <footer><cite id="author"></cite></footer><br>
+      <row>
+      <button class="btn btn-success active" id="refresh" onclick="doIt()">New Quote!</button>
+      <button class="btn btn-success active" id="twitter">Tweet Quote!</button>
+        
+      </row>
+    </div>
+   <div id="by">A Page by Sho'nuffdig</div>
+  </row>
+</div>
+<script src='//production-assets.codepen.io/assets/common/stopExecutionOnTimeout-58d22c749295bca52f487966e382a94a495ac103faca9206cbd160bdf8aedf2a.js'></script><script src='https://code.jquery.com/jquery-2.2.4.min.js'></script>
+<script>function doIt(jQuery) {
+    var output = $.ajax({
+        url: 'https://andruxnet-random-famous-quotes.p.mashape.com/?cat=movies',
+        type: 'GET',
+        data: {},
+        dataType: 'json',
+        success: function (data) {
+            document.getElementById('quote').innerHTML = '<span>' + '"' + '</span>' + data.quote + '<span>' + '"' + '</span>';
+            document.getElementById('author').innerHTML = data.author;
+            window.author = data.author;
+            window.quote = data.quote;
+        },
+        error: function (err) {
+            alert(err);
+        },
+        beforeSend: function (fuck) {
+            fuck.setRequestHeader('X-Mashape-Authorization', 'PiU9XK43NOmsho8EQiQM5WfKk8eep1z8G7cjsnM5vWiw5MYAqe');
+        }
+    });
+}
+function rand(min, max) {
+    return parseInt(Math.random() * (max - min + 1), 10) + min;
+}
+function get_random_color(jQuery) {
+    var h = rand(1, 360);
+    var s = rand(30, 100);
+    var l = rand(30, 70);
+    return 'hsl(' + h + ',' + s + '%,' + l + '%)';
+}
+$('#twitter').on('click', function () {
+    tweet('https://twitter.com/intent/tweet?text=' + encodeURIComponent('"' + quote + '" ' + author));
+});
+function tweet(url) {
+    window.open(url, 'Share', 'width=700, height=500, toolbar=0, scrollbars=1 ,location=0 ,statusbar=0,menubar=0, resizable=1');
+}
+$(document).ready(function () {
+    doIt();
+    $('.container').css('background-color', get_random_color);
+    $('button').css('background-color', get_random_color);
+    $('.jumbotron').css('background-color', get_random_color);
+    $('#refresh').click(function () {
+        $('.container').css('background-color', get_random_color);
+        $('button').css('background-color', get_random_color);
+        $('.jumbotron').css('background-color', get_random_color);
+    });
+});
+//# sourceURL=pen.js
+</script>
+</body></html>
